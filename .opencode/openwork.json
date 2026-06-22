@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "product-showcase",
+    "createdAt": 1782134699539,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "C:\\Users\\Anirudh\\Downloads\\product-showcase\\product-showcase"
+  ],
+  "reload": null
+}
