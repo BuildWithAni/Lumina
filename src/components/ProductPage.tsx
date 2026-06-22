@@ -209,9 +209,9 @@ export default function ProductPage() {
 
   /* ─── Main Render ─── */
   return (
-    <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50 transition-colors duration-500">
+    <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50">
       {/* ═══════════ HEADER ═══════════ */}
-      <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
+      <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-sm lg:backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 sm:h-[72px] flex items-center justify-between pr-16 sm:pr-4 lg:pr-6">
           <div className="flex items-center gap-4">
             <button

@@ -98,8 +98,8 @@ export default function ProductsPage() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50 transition-colors duration-500 relative">
-      <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
+    <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50 relative">
+      <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-sm lg:backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
         <div className="max-w-full mx-auto px-4 lg:px-6 py-3 sm:h-[72px] sm:py-0 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
           <button onClick={() => navigate('/')} className="sm:absolute sm:left-4 lg:left-6 flex items-center gap-2.5 shrink-0 self-start pr-14 sm:pr-0">
             <span className="font-black text-2xl tracking-[-0.03em] text-zinc-900 dark:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_2px_6px_rgba(255,255,255,0.1)]">Lumina</span>
