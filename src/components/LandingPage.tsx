@@ -166,33 +166,33 @@ export default function LandingPage() {
 
       {/* ─── NAV ─── */}
       <nav className="fixed top-0 inset-x-0 z-50 h-16">
-        <div className="max-w-[1400px] mx-auto px-8 lg:px-12 h-full flex items-center justify-between">
-          <span className="font-black text-3xl tracking-[-0.03em] text-zinc-900 dark:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_2px_6px_rgba(255,255,255,0.1)]">Lumina</span>
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 h-full flex items-center justify-between">
+          <span className="font-black text-2xl sm:text-3xl tracking-[-0.03em] text-zinc-900 dark:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_2px_6px_rgba(255,255,255,0.1)]">Lumina</span>
         </div>
       </nav>
 
       {/* ─── Theme Toggle (fixed right side) ─── */}
-      <div className="fixed top-4 right-6 z-50">
+      <div className="fixed top-4 right-4 sm:right-6 z-50">
         <ThemeToggle dark={dark} onToggle={toggle} />
       </div>
 
       {/* ─── HERO (single viewport) ─── */}
-      <section className="relative h-screen flex items-center pt-16 overflow-hidden">
+      <section className="relative min-h-screen lg:h-screen flex items-center pt-20 pb-10 sm:pb-14 lg:pt-16 lg:pb-0 overflow-x-hidden lg:overflow-hidden">
 
-        <div className="max-w-[1400px] mx-auto px-8 lg:px-12 w-full">
-          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 w-full">
+          <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-10 lg:gap-20">
 
             {/* ── Left: Text ── */}
-            <div className="flex-[1.2] z-10 pt-8 lg:pt-0 lg:pr-4">
+            <div className="flex-[1.2] z-10 pt-4 sm:pt-8 lg:pt-0 lg:pr-4">
 
               {/* Heading */}
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mt-6"
+                className="mt-2 sm:mt-6"
               >
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.04] tracking-[-0.03em] max-w-2xl">
+                <h1 className="text-[2.55rem] sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.05] tracking-[-0.03em] max-w-2xl">
                   <span className="text-zinc-900 dark:text-white">Discover Products</span>
                   <br />
                   <span className="relative">
@@ -224,7 +224,7 @@ export default function LandingPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleEnter}
-                  className="group inline-flex items-center gap-2.5 px-7 py-3.5 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
+                  className="group inline-flex w-full sm:w-auto items-center justify-center gap-2.5 px-7 py-3.5 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30"
                 >
                   <span>Start Exploring</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -236,17 +236,17 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mt-12 pt-8"
+                className="mt-8 sm:mt-12 pt-6 sm:pt-8"
               >
-                <div className="flex items-center">
+                <div className="grid grid-cols-3 gap-3 sm:flex sm:items-center">
                   {[
                     { value: '200+', label: 'Products' },
                     { value: '30+', label: 'Categories' },
                     { value: '4.5★', label: 'Avg Rating' },
                   ].map((s, i) => (
-                    <div key={s.label} className={`${i === 0 ? 'pr-8' : i === 1 ? 'px-8' : 'pl-8'}`}>
-                      <p className="text-zinc-900 dark:text-white text-xl font-black tracking-tight">{s.value}</p>
-                      <p className="text-zinc-400 dark:text-[#707080] text-[11px] font-medium mt-0.5 tracking-wide uppercase">{s.label}</p>
+                    <div key={s.label} className={`min-w-0 text-center sm:text-left ${i === 0 ? 'sm:pr-8' : i === 1 ? 'sm:px-8' : 'sm:pl-8'}`}>
+                      <p className="text-zinc-900 dark:text-white text-lg sm:text-xl font-black tracking-tight">{s.value}</p>
+                      <p className="text-zinc-400 dark:text-[#707080] text-[10px] sm:text-[11px] font-medium mt-0.5 tracking-wide uppercase leading-tight">{s.label}</p>
                     </div>
                   ))}
                 </div>
@@ -257,13 +257,13 @@ export default function LandingPage() {
             {/* ── Right: Floating Products ── */}
             {isMobile ? (
               /* Mobile: flex-wrap grid — guarantees no overlap on any screen width */
-              <div className="flex-1 w-full z-10 mt-4">
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 px-2">
+              <div className="flex-1 w-full z-10 mt-0 sm:mt-4">
+                <div className="flex flex-wrap justify-center gap-2.5 sm:gap-4 px-0 sm:px-2">
                   {productTiles.slice(0, 9).map((tile) =>
                     tile.thumbnail ? (
                       <div
                         key={tile.id}
-                        className="w-[88px] h-[88px] sm:w-24 sm:h-24 rounded-2xl bg-white shadow-[0_8px_32px_-8px_rgba(59,130,246,0.3)] dark:shadow-[0_8px_32px_-8px_rgba(255,255,255,0.15)] ring-1 ring-black/5 dark:ring-white/10 overflow-hidden"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white shadow-[0_8px_32px_-8px_rgba(59,130,246,0.3)] dark:shadow-[0_8px_32px_-8px_rgba(255,255,255,0.15)] ring-1 ring-black/5 dark:ring-white/10 overflow-hidden"
                       >
                         <img
                           src={tile.thumbnail}
@@ -274,7 +274,7 @@ export default function LandingPage() {
                     ) : (
                       <div
                         key={tile.id}
-                        className="w-[88px] h-[88px] sm:w-24 sm:h-24 rounded-2xl bg-zinc-200 dark:bg-white/5 animate-pulse"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-zinc-200 dark:bg-white/5 animate-pulse"
                       />
                     )
                   )}

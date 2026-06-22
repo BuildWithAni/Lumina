@@ -52,11 +52,11 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
       onClick={onClick}
       className="group relative glass-card rounded-2xl overflow-hidden cursor-pointer
         shadow-lg hover:shadow-2xl hover:shadow-indigo-500/20 dark:hover:shadow-indigo-500/10
-        transition-all duration-300 flex flex-col md:flex-row"
+        transition-all duration-300 flex w-full flex-col md:flex-row"
       style={{ willChange: 'transform' }}
     >
       {/* Image */}
-      <div className="relative overflow-hidden md:w-64 lg:w-72 shrink-0 bg-white dark:bg-zinc-900/60 p-6 flex items-center justify-center min-h-[200px]">
+      <div className="relative overflow-hidden md:w-64 lg:w-72 shrink-0 bg-white dark:bg-zinc-900/60 p-4 sm:p-6 flex items-center justify-center min-h-[180px] sm:min-h-[200px]">
         {/* Subtle glow behind image */}
         <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         {discountedPrice && (
@@ -68,14 +68,14 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           src={product.thumbnail}
           alt={product.title}
           loading="lazy"
-          className="w-full h-48 object-contain drop-shadow-xl relative z-10"
+          className="w-full h-40 sm:h-48 object-contain drop-shadow-xl relative z-10"
           whileHover={{ scale: 1.08, rotate: -1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         />
       </div>
 
       {/* Content */}
-      <div className="p-6 py-7 flex flex-col flex-1 relative z-20 gap-3">
+      <div className="p-4 sm:p-6 sm:py-7 flex flex-col flex-1 relative z-20 gap-3">
         {/* Title */}
         <h3 className="text-base md:text-lg font-semibold text-zinc-900 dark:text-zinc-50 leading-snug hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors line-clamp-2">
           {product.title}
@@ -88,7 +88,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         </span>
 
         {/* Rating */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{product.rating.toFixed(1)}</span>
           <StarRating rating={product.rating} />
           <span className="text-sm text-sky-600 dark:text-sky-400">({(Math.floor(product.rating * 1234) % 4900 + 100).toLocaleString()} reviews)</span>
@@ -106,7 +106,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         <div className="flex flex-wrap items-baseline gap-2">
           <div className="flex items-baseline gap-1">
             <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50 relative -top-1.5">INR</span>
-            <span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            <span className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
               {discountedPrice
                 ? (discountedPrice * 83).toLocaleString('en-IN', { maximumFractionDigits: 0 })
                 : (product.price * 83).toLocaleString('en-IN', { maximumFractionDigits: 0 })}

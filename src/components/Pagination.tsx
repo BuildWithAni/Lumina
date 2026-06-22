@@ -17,7 +17,7 @@ export default function Pagination({
   const pages = getPageNumbers(page, totalPages);
 
   return (
-    <div className="flex items-center justify-center gap-1.5 mt-10">
+    <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-8 sm:mt-10">
       <NavButton
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
@@ -30,7 +30,7 @@ export default function Pagination({
         p === '…' ? (
           <span
             key={`ellipsis-${i}`}
-            className="w-9 h-9 flex items-center justify-center text-zinc-400 text-sm"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-zinc-400 text-sm"
           >
             …
           </span>
@@ -39,7 +39,7 @@ export default function Pagination({
             key={p}
             whileTap={{ scale: 0.96 }}
             onClick={() => onPageChange(p as number)}
-            className={`w-10 h-10 rounded-full text-sm font-semibold transition-all duration-300
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full text-sm font-semibold transition-all duration-300
               ${
                 p === page
                   ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md shadow-indigo-500/20'
@@ -59,7 +59,7 @@ export default function Pagination({
         <ChevronRight className="w-4 h-4" />
       </NavButton>
 
-      <span className="ml-2 text-xs text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
+      <span className="basis-full sm:basis-auto text-center sm:ml-2 mt-1 sm:mt-0 text-xs text-zinc-400 dark:text-zinc-500 whitespace-nowrap">
         Page {page} of {totalPages}
       </span>
     </div>
@@ -83,7 +83,7 @@ function NavButton({
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
-      className="w-10 h-10 rounded-full flex items-center justify-center
+      className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
         glass-card text-zinc-500 dark:text-zinc-400 transition-all duration-300
         disabled:opacity-30 disabled:cursor-not-allowed
         hover:bg-zinc-100/50 dark:hover:bg-zinc-700/50 hover:text-zinc-900 dark:hover:text-zinc-50 disabled:hover:bg-transparent disabled:hover:text-zinc-500 dark:disabled:hover:text-zinc-400"

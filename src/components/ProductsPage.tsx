@@ -7,6 +7,7 @@ import { useTheme } from '../hooks/useTheme';
 import { sortProducts } from '../utils/sort';
 import { encodeProductId } from '../utils/productId';
 import type { Product, SortOption } from '../types/product';
+import { SlidersHorizontal } from 'lucide-react';
 import ProductGrid from './ProductGrid';
 import SearchBar from './SearchBar';
 import Pagination from './Pagination';
@@ -14,6 +15,7 @@ import ErrorState from './ErrorState';
 import ThemeToggle from './ThemeToggle';
 import LeftSidebar from './LeftSidebar';
 import RightSidebar from './RightSidebar';
+import FilterPanel from './FilterPanel';
 
 export default function ProductsPage() {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ export default function ProductsPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchRaw, setSearchRaw] = useState('');
   const [sort, setSort] = useState<SortOption>('default');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>(() => {
     try {
       const stored = localStorage.getItem('lumina:recentlyViewed');
@@ -66,6 +69,15 @@ export default function ProductsPage() {
     return sortProducts(result, sort);
   }, [products, search, sort, minRating, priceRange]);
 
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (activeCategory) count += 1;
+    if (sort !== 'default') count += 1;
+    if (minRating > 0) count += 1;
+    if (priceRange[0] > 0 || priceRange[1] < 83000) count += 1;
+    return count;
+  }, [activeCategory, sort, minRating, priceRange]);
+
   const handleCategoryChange = useCallback((slug: string | null) => {
     setActiveCategory(slug);
     setSearchRaw('');
@@ -88,22 +100,36 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50 transition-colors duration-500 relative">
       <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
-        <div className="max-w-full mx-auto px-4 lg:px-6 h-[72px] flex items-center justify-center">
-          <button onClick={() => navigate('/')} className="absolute left-4 lg:left-6 flex items-center gap-2.5 shrink-0">
+        <div className="max-w-full mx-auto px-4 lg:px-6 py-3 sm:h-[72px] sm:py-0 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3">
+          <button onClick={() => navigate('/')} className="sm:absolute sm:left-4 lg:left-6 flex items-center gap-2.5 shrink-0 self-start pr-14 sm:pr-0">
             <span className="font-black text-2xl tracking-[-0.03em] text-zinc-900 dark:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_2px_6px_rgba(255,255,255,0.1)]">Lumina</span>
           </button>
-          <div className="w-full max-w-md">
+          <div className="w-full sm:max-w-md">
             <SearchBar value={searchRaw} onChange={setSearchRaw} />
           </div>
         </div>
       </header>
 
       {/* ─── Theme Toggle (fixed right side) ─── */}
-      <div className="fixed top-4 right-6 z-50">
+      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 z-50">
         <ThemeToggle dark={dark} onToggle={toggle} />
       </div>
 
-      <div className="max-w-full mx-auto px-4 lg:px-6 py-8">
+      <FilterPanel
+        isOpen={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        categories={categories}
+        activeCategory={activeCategory}
+        onSelectCategory={handleCategoryChange}
+        sort={sort}
+        onSelectSort={setSort}
+        minRating={minRating}
+        onMinRatingChange={setMinRating}
+        priceRange={priceRange}
+        onPriceRangeChange={setPriceRange}
+      />
+
+      <div className="max-w-full mx-auto px-4 lg:px-6 py-5 sm:py-8">
         <div className="flex gap-6">
           {/* Left Sidebar */}
           <LeftSidebar
@@ -121,10 +147,25 @@ export default function ProductsPage() {
 
           {/* Main Content */}
           <main className="flex-1 min-w-0">
+            <div className="lg:hidden mb-4">
+              <button
+                onClick={() => setFiltersOpen(true)}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl glass-card px-4 py-3 text-sm font-bold text-zinc-800 dark:text-zinc-100"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-indigo-500" />
+                <span>Filters & Sort</span>
+                {activeFilterCount > 0 && (
+                  <span className="min-w-5 h-5 px-1.5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </div>
+
             {/* Result info bar */}
             {!loading && !error && (
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-200/50 dark:border-white/10">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 pb-4 border-b border-zinc-200/50 dark:border-white/10">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 break-words">
                   Showing{' '}
                   <span className="font-semibold text-zinc-800 dark:text-zinc-200">{processed.length}</span>
                   {' '}of{' '}
@@ -137,8 +178,8 @@ export default function ProductsPage() {
                     <span className="ml-1">for <span className="font-semibold text-indigo-600 dark:text-indigo-400">"{search}"</span></span>
                   )}
                 </p>
-                {(minRating > 0 || priceRange[1] < 83000 || activeCategory) && (
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-700/50">
+                {activeFilterCount > 0 && (
+                  <span className="self-start text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-700/50">
                     Filters Active
                   </span>
                 )}

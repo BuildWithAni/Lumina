@@ -10,7 +10,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="relative flex-1 max-w-sm">
+    <div className="relative w-full max-w-sm">
       <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 z-10 w-4 h-4 text-zinc-500 dark:text-zinc-400 pointer-events-none" />
       <input
         ref={ref}

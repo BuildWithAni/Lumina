@@ -58,9 +58,9 @@ function SpecCard({ icon, label, value }: { icon: React.ReactNode; label: string
       <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 dark:text-indigo-400 shrink-0">
         {icon}
       </div>
-      <div>
+      <div className="min-w-0">
         <p className="text-xs font-medium text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">{label}</p>
-        <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{value}</p>
+        <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 break-words">{value}</p>
       </div>
     </div>
   );
@@ -86,7 +86,7 @@ function InfoCard({ icon, title, description, color }: { icon: React.ReactNode; 
 function ReviewCard({ review }: { review: Review }) {
   return (
     <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900/60 border border-zinc-200/50 dark:border-zinc-700/50 shadow-sm">
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">
             {review.reviewerName.charAt(0)}
@@ -212,7 +212,7 @@ export default function ProductPage() {
     <div className="min-h-screen bg-gradient-mesh-light dark:bg-gradient-mesh text-zinc-900 dark:text-zinc-50 transition-colors duration-500">
       {/* ═══════════ HEADER ═══════════ */}
       <header className="sticky top-0 z-30 bg-white/70 dark:bg-[#0a0a10]/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-white/5">
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 h-[72px] flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 h-16 sm:h-[72px] flex items-center justify-between pr-16 sm:pr-4 lg:pr-6">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/products')}
@@ -238,15 +238,15 @@ export default function ProductPage() {
       </header>
 
       {/* ─── Theme Toggle ─── */}
-      <div className="fixed top-4 right-6 z-50">
+      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 z-50">
         <ThemeToggle dark={dark} onToggle={toggle} />
       </div>
 
       {/* ═══════════ MAIN CONTENT ═══════════ */}
-      <div className="h-[calc(100vh-72px)] overflow-hidden flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:h-[calc(100vh-72px)] lg:overflow-hidden lg:flex-row">
 
         {/* ── LEFT: Square Image (stays fixed while details scroll) ── */}
-        <div className="bg-zinc-100/50 dark:bg-zinc-900/30 lg:w-[500px] xl:w-[580px] shrink-0 flex flex-col">
+        <div className="w-full bg-zinc-100/50 dark:bg-zinc-900/30 lg:w-[500px] xl:w-[580px] shrink-0 flex flex-col">
           {/* Mobile: horizontal scroll of thumbs */}
           <div className="flex lg:hidden gap-2 p-4 pb-0 overflow-x-auto">
             {product.images.map((img, i) => (
@@ -265,7 +265,7 @@ export default function ProductPage() {
           </div>
 
           {/* Square image area */}
-          <div className="flex gap-4 p-6 lg:p-8 xl:p-10 flex-1 aspect-square max-h-[580px] xl:max-h-[680px]">
+          <div className="flex h-[min(72vw,360px)] gap-3 p-4 sm:h-[420px] sm:p-6 lg:h-auto lg:gap-4 lg:p-8 xl:p-10 lg:flex-1 lg:aspect-square lg:max-h-[580px] xl:max-h-[680px]">
             {/* Desktop: vertical thumbnail strip */}
             <div className="hidden lg:flex flex-col gap-2.5">
               {product.images.map((img, i) => (
@@ -298,7 +298,7 @@ export default function ProductPage() {
                     onClick={() => navigateImg(-1)}
                     className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full
                       bg-white/80 dark:bg-zinc-900/80 flex items-center justify-center
-                      shadow-lg hover:bg-white dark:hover:bg-zinc-900 transition-colors opacity-0 group-hover:opacity-100"
+                      shadow-lg hover:bg-white dark:hover:bg-zinc-900 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="w-4 h-4 text-zinc-700 dark:text-zinc-200" />
@@ -307,7 +307,7 @@ export default function ProductPage() {
                     onClick={() => navigateImg(1)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full
                       bg-white/80 dark:bg-zinc-900/80 flex items-center justify-center
-                      shadow-lg hover:bg-white dark:hover:bg-zinc-900 transition-colors opacity-0 group-hover:opacity-100"
+                      shadow-lg hover:bg-white dark:hover:bg-zinc-900 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
                     aria-label="Next image"
                   >
                     <ChevronRight className="w-4 h-4 text-zinc-700 dark:text-zinc-200" />
@@ -319,8 +319,8 @@ export default function ProductPage() {
         </div>
 
         {/* ── RIGHT: Scrollable details column ── */}
-        <div className="flex-1 lg:border-l border-zinc-200/50 dark:border-zinc-700/50 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md overflow-y-auto">
-          <div className="p-6 lg:p-8 xl:p-10 space-y-6">
+        <div className="flex-1 lg:border-l border-zinc-200/50 dark:border-zinc-700/50 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md lg:overflow-y-auto">
+          <div className="p-4 sm:p-6 lg:p-8 xl:p-10 space-y-6">
 
             {/* Tags & Stock */}
             <div className="flex items-center gap-2 flex-wrap">
@@ -335,7 +335,7 @@ export default function ProductPage() {
 
             {/* Title & Brand */}
             <div>
-              <h1 className="text-2xl xl:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-tight">
+              <h1 className="text-2xl sm:text-3xl xl:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 leading-tight">
                 {product.title}
               </h1>
               {product.brand && (
@@ -346,7 +346,7 @@ export default function ProductPage() {
             </div>
 
             {/* Rating */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               <StarRating rating={product.rating} />
               <span className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
                 {product.rating.toFixed(1)}
@@ -363,7 +363,7 @@ export default function ProductPage() {
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <div className="flex items-baseline gap-1">
                   <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">INR</span>
-                  <span className="text-3xl xl:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50">
+                  <span className="text-2xl sm:text-3xl xl:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50">
                     {discountedPrice
                       ? (discountedPrice * 83).toLocaleString('en-IN', { maximumFractionDigits: 0 })
                       : (product.price * 83).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
@@ -432,7 +432,7 @@ export default function ProductPage() {
                 </motion.div>
                 Specifications
               </h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { icon: <Weight className="w-5 h-5" />, label: 'Weight', value: `${product.weight} g` },
                   { icon: <Ruler className="w-5 h-5" />, label: 'Dimensions', value: `${product.dimensions.width} × ${product.dimensions.height} × ${product.dimensions.depth} cm` },
@@ -535,7 +535,7 @@ export default function ProductPage() {
             >
               <button
                 onClick={() => navigate('/products')}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 font-semibold text-sm transition-colors border border-zinc-200/50 dark:border-zinc-700/50"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 font-semibold text-sm transition-colors border border-zinc-200/50 dark:border-zinc-700/50"
               >
                 <motion.span
                   animate={{ x: [0, 4, 0] }}
