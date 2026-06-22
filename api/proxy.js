@@ -2,15 +2,27 @@
 // Replaces the Express server for Vercel deployment.
 // Uses Cache-Control headers for Vercel Edge Network caching.
 
+// ── DummyJSON URL mapping ──
+// Frontend calls /api/categories but DummyJSON's endpoint is /products/categories
+const ROUTES = {
+  '/categories':          '/products/categories',
+  '/products/category/':  '/products/category/',
+};
 const DUMMYJSON_BASE = 'https://dummyjson.com';
 
 export default async function handler(req, res) {
   try {
-    // Extract the path after /api, e.g. /api/products/1 → /products/1
     const urlObj = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     const path = urlObj.pathname.replace(/^\/api/, '') || '/';
     const qs = urlObj.search || '';
-    const target = `${DUMMYJSON_BASE}${path}${qs}`;
+
+    // Map frontend API path → DummyJSON path
+    let targetPath = path;
+    if (path === '/categories') {
+      targetPath = ROUTES['/categories'];
+    }
+
+    const target = `${DUMMYJSON_BASE}${targetPath}${qs}`;
 
     console.log(`[PROXY] ${req.method} ${target}`);
 
@@ -21,12 +33,12 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Determine cache duration based on endpoint type
-    let maxAge = 30; // default: product lists / searches
-    if (/^\/products\/\d+$/.test(path)) {
-      maxAge = 120; // product detail — less volatile
-    } else if (/^\/(categories|products\/category\/)/.test(path)) {
-      maxAge = 300; // categories — rarely change
+    // Edge cache duration based on endpoint type
+    let maxAge = 30;
+    if (/^\/products\/\d+$/.test(targetPath)) {
+      maxAge = 120;
+    } else if (/^\/products\/categories/.test(targetPath) || /^\/products\/category\//.test(targetPath)) {
+      maxAge = 300;
     }
 
     res.setHeader('Cache-Control', `s-maxage=${maxAge}, stale-while-revalidate`);
