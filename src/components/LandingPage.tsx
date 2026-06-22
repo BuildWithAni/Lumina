@@ -72,8 +72,7 @@ const SAMPLE_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const ROTS = [-4, 5, -6, 3, -3, 4, -5, 6, -4, 3, -5];
 const SCALES = [0.85, 0.8, 0.9, 0.75, 0.85, 0.9, 0.75, 0.85, 0.9, 0.8, 0.85];
 
-// Desktop positions — wide horizontal spread for the right-column container
-const DESKTOP_POSITIONS = [
+const TILE_POSITIONS = [
   { x: 6,  y: 3  },
   { x: 82, y: 5  },
   { x: 24, y: 22 },
@@ -87,24 +86,8 @@ const DESKTOP_POSITIONS = [
   { x: 74, y: 83 },
 ];
 
-// Mobile positions — tighter horizontal spread, better vertical distribution
-const MOBILE_POSITIONS = [
-  { x: 10, y: 4  },
-  { x: 76, y: 6  },
-  { x: 22, y: 24 },
-  { x: 70, y: 20 },
-  { x: 8,  y: 42 },
-  { x: 50, y: 44 },
-  { x: 85, y: 38 },
-  { x: 18, y: 62 },
-  { x: 74, y: 58 },
-  { x: 28, y: 80 },
-  { x: 72, y: 82 },
-];
-
-function generateTiles(isMobile: boolean): ProductTile[] {
-  const positions = isMobile ? MOBILE_POSITIONS : DESKTOP_POSITIONS;
-  return positions.map((pos, i) => ({
+function generateTiles(): ProductTile[] {
+  return TILE_POSITIONS.map((pos, i) => ({
     id: SAMPLE_IDS[i],
     thumbnail: '',
     title: '',
@@ -135,7 +118,7 @@ export default function LandingPage() {
   }, [handleResize]);
 
   const [productMap, setProductMap] = useState<Record<number, { thumbnail: string; title: string }>>({});
-  const tiles = generateTiles(isMobile);
+  const tiles = generateTiles();
 
   useEffect(() => {
     fetch('/api/products?limit=15')
@@ -272,21 +255,49 @@ export default function LandingPage() {
             </div>
 
             {/* ── Right: Floating Products ── */}
-            <div className="flex-1 relative w-full h-[520px] sm:h-[600px] lg:h-[660px] z-10 mt-4 lg:mt-0">
-              <div className="absolute inset-0" style={{ perspective: '1000px' }}>
-                {productTiles.map((tile, i) => (
-                  tile.thumbnail ? (
-                    <FloatingProduct key={tile.id} tile={tile} index={i} />
-                  ) : (
-                    <div
-                      key={tile.id}
-                      className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-zinc-200 dark:bg-white/5 animate-pulse"
-                      style={{ left: `${tile.x}%`, top: `${tile.y}%`, rotate: `${tile.rot}deg`, transform: 'translate(-50%, -50%)' }}
-                    />
-                  )
-                ))}
+            {isMobile ? (
+              /* Mobile: flex-wrap grid — guarantees no overlap on any screen width */
+              <div className="flex-1 w-full z-10 mt-4">
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 px-2">
+                  {productTiles.slice(0, 9).map((tile) =>
+                    tile.thumbnail ? (
+                      <div
+                        key={tile.id}
+                        className="w-[88px] h-[88px] sm:w-24 sm:h-24 rounded-2xl bg-white shadow-[0_8px_32px_-8px_rgba(59,130,246,0.3)] dark:shadow-[0_8px_32px_-8px_rgba(255,255,255,0.15)] ring-1 ring-black/5 dark:ring-white/10 overflow-hidden"
+                      >
+                        <img
+                          src={tile.thumbnail}
+                          alt={tile.title}
+                          className="w-full h-full object-contain p-1.5"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        key={tile.id}
+                        className="w-[88px] h-[88px] sm:w-24 sm:h-24 rounded-2xl bg-zinc-200 dark:bg-white/5 animate-pulse"
+                      />
+                    )
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              /* Desktop: absolute-positioned floating tiles with bobbing animation */
+              <div className="flex-1 relative w-full h-[520px] sm:h-[600px] lg:h-[660px] z-10 mt-4 lg:mt-0">
+                <div className="absolute inset-0" style={{ perspective: '1000px' }}>
+                  {productTiles.map((tile, i) => (
+                    tile.thumbnail ? (
+                      <FloatingProduct key={tile.id} tile={tile} index={i} />
+                    ) : (
+                      <div
+                        key={tile.id}
+                        className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-zinc-200 dark:bg-white/5 animate-pulse"
+                        style={{ left: `${tile.x}%`, top: `${tile.y}%`, rotate: `${tile.rot}deg`, transform: 'translate(-50%, -50%)' }}
+                      />
+                    )
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
