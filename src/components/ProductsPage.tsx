@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
@@ -22,7 +22,14 @@ export default function ProductsPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchRaw, setSearchRaw] = useState('');
   const [sort, setSort] = useState<SortOption>('default');
-  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>(() => {
+    try {
+      const stored = localStorage.getItem('lumina:recentlyViewed');
+      return stored ? (JSON.parse(stored) as Product[]) : [];
+    } catch {
+      return [];
+    }
+  });
   const [minRating, setMinRating] = useState(0);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 83000]);
 
@@ -64,6 +71,11 @@ export default function ProductsPage() {
     setSearchRaw('');
     navigate('/products', { replace: true });
   }, [navigate]);
+
+  // Persist recently viewed to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('lumina:recentlyViewed', JSON.stringify(recentlyViewed));
+  }, [recentlyViewed]);
 
   const handleProductClick = useCallback((p: Product) => {
     navigate(`/products/${encodeProductId(p.id)}`);

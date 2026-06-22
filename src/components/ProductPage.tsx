@@ -137,6 +137,15 @@ export default function ProductPage() {
         setProduct(data);
         setImgIndex(0);
         setLoading(false);
+
+        // Track in recently viewed (persisted via localStorage)
+        try {
+          const stored = localStorage.getItem('lumina:recentlyViewed');
+          const viewed: Product[] = stored ? JSON.parse(stored) : [];
+          const filtered = viewed.filter((x) => x.id !== data.id);
+          filtered.unshift(data);
+          localStorage.setItem('lumina:recentlyViewed', JSON.stringify(filtered.slice(0, 5)));
+        } catch { /* ignore */ }
       })
       .catch((e) => {
         if (e.name !== 'CanceledError' && e.name !== 'AbortError') {
