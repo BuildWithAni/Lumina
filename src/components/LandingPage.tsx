@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, useMotionValue, animate } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -69,34 +69,49 @@ function FloatingProduct({ tile, index }: { tile: ProductTile; index: number }) 
 
 const SAMPLE_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
-function generateTiles(): ProductTile[] {
-  // Wide spread across the container with generous gaps
-  const positions = [
-    // Top — 2 across, far apart
-    { x: 6,  y: 3 },
-    { x: 82, y: 5 },
-    // Upper — 2 across
-    { x: 24, y: 22 },
-    { x: 76, y: 19 },
-    // Middle — 3 across
-    { x: 6,  y: 40 },
-    { x: 46, y: 44 },
-    { x: 90, y: 38 },
-    // Lower — 2 across
-    { x: 18, y: 62 },
-    { x: 74, y: 59 },
-    // Bottom — 2 across
-    { x: 28, y: 80 },
-    { x: 74, y: 83 },
-  ];
+const ROTS = [-4, 5, -6, 3, -3, 4, -5, 6, -4, 3, -5];
+const SCALES = [0.85, 0.8, 0.9, 0.75, 0.85, 0.9, 0.75, 0.85, 0.9, 0.8, 0.85];
+
+// Desktop positions — wide horizontal spread for the right-column container
+const DESKTOP_POSITIONS = [
+  { x: 6,  y: 3  },
+  { x: 82, y: 5  },
+  { x: 24, y: 22 },
+  { x: 76, y: 19 },
+  { x: 6,  y: 40 },
+  { x: 46, y: 44 },
+  { x: 90, y: 38 },
+  { x: 18, y: 62 },
+  { x: 74, y: 59 },
+  { x: 28, y: 80 },
+  { x: 74, y: 83 },
+];
+
+// Mobile positions — tighter horizontal spread, better vertical distribution
+const MOBILE_POSITIONS = [
+  { x: 10, y: 4  },
+  { x: 76, y: 6  },
+  { x: 22, y: 24 },
+  { x: 70, y: 20 },
+  { x: 8,  y: 42 },
+  { x: 50, y: 44 },
+  { x: 85, y: 38 },
+  { x: 18, y: 62 },
+  { x: 74, y: 58 },
+  { x: 28, y: 80 },
+  { x: 72, y: 82 },
+];
+
+function generateTiles(isMobile: boolean): ProductTile[] {
+  const positions = isMobile ? MOBILE_POSITIONS : DESKTOP_POSITIONS;
   return positions.map((pos, i) => ({
     id: SAMPLE_IDS[i],
     thumbnail: '',
     title: '',
     x: pos.x,
     y: pos.y,
-    rot: [-4, 5, -6, 3, -3, 4, -5, 6, -4, 3, -5][i % 11],
-    scale: [0.85, 0.8, 0.9, 0.75, 0.85, 0.9, 0.75, 0.85, 0.9, 0.8, 0.85][i % 11],
+    rot: ROTS[i % 11],
+    scale: SCALES[i % 11],
     delay: i * 0.08,
   }));
 }
@@ -105,8 +120,22 @@ export default function LandingPage() {
   const { dark, toggle } = useTheme();
   const navigate = useNavigate();
   const handleEnter = () => navigate('/products');
+
+  // Track viewport width for responsive tile positions
+  const [isMobile, setIsMobile] = useState<boolean>(() =>
+    typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+  const handleResize = useCallback(() => {
+    setIsMobile(window.innerWidth < 1024);
+  }, []);
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
+
   const [productMap, setProductMap] = useState<Record<number, { thumbnail: string; title: string }>>({});
-  const tiles = generateTiles();
+  const tiles = generateTiles(isMobile);
 
   useEffect(() => {
     fetch('/api/products?limit=15')
