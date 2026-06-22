@@ -224,9 +224,9 @@ export default function LandingPage() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-                className="mt-12 pt-8 border-t border-zinc-200 dark:border-white/5"
+                className="mt-12 pt-8"
               >
-                <div className="flex items-center divide-x divide-zinc-200 dark:divide-white/10">
+                <div className="flex items-center">
                   {[
                     { value: '200+', label: 'Products' },
                     { value: '30+', label: 'Categories' },
@@ -262,12 +262,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* ─── Footer (inside hero, at bottom) ─── */}
-        <footer className="absolute bottom-0 inset-x-0 border-t border-zinc-200 dark:border-white/5 py-4 text-center">
-          <p className="text-zinc-400 dark:text-[#505060] text-[11px]">
-            Built with React, TypeScript &amp; Tailwind CSS · Data from DummyJSON
-          </p>
-        </footer>
+
       </section>
 
     </div>
