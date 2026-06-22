@@ -234,10 +234,10 @@ export default function ProductPage() {
       </div>
 
       {/* ═══════════ MAIN CONTENT ═══════════ */}
-      <div className="flex flex-col lg:flex-row min-h-[calc(100vh-72px)] overflow-y-auto">
+      <div className="h-[calc(100vh-72px)] overflow-hidden flex flex-col lg:flex-row">
 
-        {/* ── LEFT: Square Image (sticky — stays in place) ── */}
-        <div className="bg-zinc-100/50 dark:bg-zinc-900/30 lg:w-[500px] xl:w-[580px] shrink-0 flex flex-col lg:sticky lg:top-0 lg:self-start">
+        {/* ── LEFT: Square Image (stays fixed while details scroll) ── */}
+        <div className="bg-zinc-100/50 dark:bg-zinc-900/30 lg:w-[500px] xl:w-[580px] shrink-0 flex flex-col">
           {/* Mobile: horizontal scroll of thumbs */}
           <div className="flex lg:hidden gap-2 p-4 pb-0 overflow-x-auto">
             {product.images.map((img, i) => (
@@ -309,8 +309,8 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* ── RIGHT: All data in one block ── */}
-        <div className="flex-1 lg:border-l border-zinc-200/50 dark:border-zinc-700/50 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md">
+        {/* ── RIGHT: Scrollable details column ── */}
+        <div className="flex-1 lg:border-l border-zinc-200/50 dark:border-zinc-700/50 bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md overflow-y-auto">
           <div className="p-6 lg:p-8 xl:p-10 space-y-6">
 
             {/* Tags & Stock */}
