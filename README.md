@@ -1,80 +1,90 @@
 # Lumina — Product Showcase Explorer
 
-**Frontend Developer Take-Home (Razorpod)**
+**Frontend Developer Take-Home Assignment — Razorpod**
 
-Lumina is a modern, fully-responsive product discovery UI built with **React + TypeScript + Vite**. It fetches data from the **DummyJSON Products API** through a custom **Node.js/Express backend proxy** with in-memory caching, and renders it with a premium **glassmorphic** aesthetic and purposeful **Framer Motion** animations.
+A modern, responsive product discovery UI that fetches data from the [DummyJSON Products API](https://dummyjson.com/products) and presents it with a clean **glassmorphic** design and purposeful **Framer Motion** animations.
 
 ---
 
-## Demo
+## Links
 
-| Route | Description |
+| | |
 |---|---|
-| `/` | Landing page with floating product tiles |
-| `/products` | Product listing with filters, search, sort, pagination |
-| `/products/{6-CHAR-ID}` | Standalone product detail page (Amazon-style) |
+| **Deployment** | [https://lumina-nine-zeta.vercel.app](https://lumina-nine-zeta.vercel.app) |
+| **Repository** | [https://github.com/BuildWithAni/Lumina](https://github.com/BuildWithAni/Lumina) |
 
 ---
 
 ## Features
 
 ### Core Requirements
-| Feature | Detail |
-|---|---|
-| **Browse products** | Paginated grid with 12 items per page via `/api/products?limit=12&skip=0` |
-| **Filter by category** | Sidebar with category pills fetched from `/api/categories`, expandable for long lists |
-| **Filter by rating** | Minimum star rating filter (1–5) |
-| **Filter by price range** | INR price range slider |
-| **Search** | Debounced (400ms) text search across product titles |
-| **Sort** | Price (asc/desc), Title (A–Z / Z–A), Default |
-| **Product detail page** | Standalone page with image gallery, specs, policies, reviews |
-| **Loading states** | Skeleton cards with shimmer animation + spinner |
-| **Error handling** | ErrorState component with retry button |
-| **Responsive** | Mobile / Tablet / Desktop via Tailwind breakpoints |
 
-### Bonus 1 — Advanced Animations (Framer Motion)
+| Requirement | Implementation |
+|---|---|
+| **Browse products** | Paginated grid (12 items/page) via DummyJSON API |
+| **Product detail view** | Standalone page (`/products/{6-char-id}`) with image gallery, specs, policies, reviews |
+| **Filter by category** | Sidebar with category pills, expandable for long lists |
+| **Sort by price / title** | Client-side sorting — ascending, descending, A–Z, Z–A |
+| **Loading states** | Skeleton shimmer cards + spinner during fetches |
+| **Error states** | ErrorState component with retry button, AbortController for race conditions |
+| **Responsive** | Fully responsive via Tailwind breakpoints (mobile, tablet, desktop) |
+
+### Animation Requirements (Framer Motion)
+
+| Requirement | Implementation |
+|---|---|
+| **List item appearance** | Staggered grid fade-in + slide-up (`staggerChildren: 0.06`) |
+| **Detail view transition** | Spring-based scale + fade on page components |
+| **Micro-interactions** | Spring-physics hover lift on cards, button feedback, theme toggle |
+
+### Bonus 1 — Advanced Animation Showcase
+
 | Animation | Technique |
 |---|---|
-| Staggered card reveal | `staggerChildren: 0.06` with fade + slide |
-| Spring physics on card hover | `whileHover={{ y: -8, scale: 1.02 }}` with `type: 'spring'` |
-| Floating product tiles (landing) | `useMotionValue` + continuous `animate()` with reverse |
-| Theme toggle knob | Spring physics `stiffness: 500, damping: 30` |
-| Scroll-triggered section reveals | `whileInView` with staggered children |
-| Layout animation on reorder | `layout` prop on cards during filter/sort |
-| Continuous back-arrow pulse | `animate={{ x: [0, 4, 0] }}` with infinite repeat |
+| **Scroll-triggered reveals** | `whileInView` with staggered children on specs, policies, reviews |
+| **Physics-based motion** | Spring animations on card hover (`stiffness: 300, damping: 15`) and theme toggle (`stiffness: 500, damping: 30`) |
+| **Floating product tiles** | `useMotionValue` + `animate()` with infinite reverse loop |
+| **Layout animation** | `layout` prop on cards during filter/sort transitions |
+| **Sequential staggered reveal** | Incremental `delay` on spec cards, review cards, and policy cards |
+| **Continuous animation** | Back-arrow pulse (`animate={{ x: [0, 4, 0] }}` with infinite repeat) |
 
-### Bonus 2 — Express Backend Proxy
-- Node.js/Express server proxy at `/api/*`
-- All frontend API calls go through the proxy (not directly to DummyJSON)
+### Bonus 2 — Node.js/Express Backend Proxy
+
+- Custom Express 5 proxy server at `/api/*` (in `server/`)
+- All frontend API calls route through the proxy, not directly to DummyJSON
 - **In-memory caching** with three TTL tiers:
   - Product lists: **30s**
   - Product details: **120s**
   - Categories: **300s**
 - Cache-health endpoint: `GET /api/health`
+- Deployed on Vercel via serverless function (`api/proxy.js`) with CDN edge caching
 
 ### Extra Polish
-- **6-character alphanumeric product IDs** in URLs (e.g., `/products/BAAHZR`) instead of raw numeric IDs
-- **Amazon-style image gallery**: vertical 72px thumbnails strip + square main image
-- **Dark mode** with spring-animated toggle switch
-- **Recently viewed** sidebar with product cards
-- **Hot Deals** (top 4 discounts) and **Top Rated** sidebar widgets
+
+- **6-character alphanumeric product IDs** (e.g., `/products/BAAHZR`) instead of raw numeric IDs
+- **Amazon-style image gallery**: vertical 72px thumbnail strip + square main image
+- **Dark mode** with spring-animated toggle switch, persisted to localStorage
+- **Recently viewed** tracking with localStorage persistence
+- **Hot Deals** (top discounts) and **Top Rated Picks** sidebar widgets
 - **INR + USD** pricing with discount badges
-- **Keyboard shortcuts**: Arrow Left/Right for images, Escape to go back
+- **Keyboard shortcuts**: Arrow Left/Right for image navigation, Escape to go back
+- **Search** with 400ms debounce
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Framework** | React 19 + TypeScript 6 |
-| **Build tool** | Vite 8 |
-| **Styling** | Tailwind CSS 3 |
-| **Animation** | Framer Motion 12 |
-| **Icons** | lucide-react |
-| **HTTP** | axios |
-| **Routing** | react-router-dom 7 |
-| **Backend proxy** | Express 5 + cors |
+| Category | Choice | Why |
+|---|---|---|
+| **Framework** | React 19 + TypeScript (strict mode) | Type safety, modern patterns, industry standard |
+| **Build tool** | Vite 8 | Fast HMR, optimized builds |
+| **Styling** | Tailwind CSS 3 | Utility-first, responsive-by-default, no CSS conflicts |
+| **Animation** | Framer Motion 12 | Declarative API, spring physics, layout animations, scroll triggers |
+| **Routing** | react-router-dom 7 | Standard React routing with loader support |
+| **Icons** | lucide-react | Lightweight, tree-shakable, consistent design |
+| **HTTP** | axios | Interceptors, AbortController integration, cleaner API |
+| **Backend proxy** | Express 5 + cors | Minimal server for API proxying, easy to extend |
+| **Dev runner** | concurrently | Runs Express + Vite in parallel with one command |
 
 ---
 
@@ -88,7 +98,6 @@ src/
 │   ├── ProductPage.tsx          # Standalone product detail
 │   ├── ProductCard.tsx          # Individual product card
 │   ├── ProductGrid.tsx          # Animated grid + skeleton + empty state
-│   ├── ProductModal.tsx         # (Legacy) modal detail view
 │   ├── LeftSidebar.tsx          # Category, sort, rating, price filters
 │   ├── RightSidebar.tsx         # Recently viewed, hot deals, top rated
 │   ├── SearchBar.tsx            # Debounced search input
@@ -115,6 +124,9 @@ src/
 server/
 ├── index.js                     # Express proxy server (port 3001)
 └── cache.js                     # In-memory TTL cache
+
+api/
+└── proxy.js                     # Vercel serverless function (for production)
 ```
 
 ---
@@ -122,35 +134,51 @@ server/
 ## Local Setup
 
 ### Prerequisites
+
 - **Node.js** 20+ (LTS recommended)
+- **npm** 9+
 
-### 1. Install dependencies
+### Install & Run
+
 ```bash
+# 1. Clone the repository
+git clone https://github.com/BuildWithAni/Lumina.git
+cd Lumina
+
+# 2. Install dependencies
 npm install
-```
 
-### 2. Run both servers (Express proxy + Vite dev)
-```bash
+# 3. Start both servers (Express proxy + Vite dev)
 npm run dev:all
 ```
 
-Or run them separately in two terminals:
+The app opens at **http://localhost:5173**.
+
+The Express proxy runs on **http://localhost:3001** — Vite automatically proxies `/api/*` requests to it.
+
+### Run servers separately
+
 ```bash
-# Terminal 1 — Express proxy on http://localhost:3001
+# Terminal 1 — Express proxy
 npm run server
 
-# Terminal 2 — Vite dev server on http://localhost:5173
+# Terminal 2 — Vite dev server
 npm run dev
 ```
 
-### 3. Open the app
-**http://localhost:5173**
+### Production build
+
+```bash
+npm run build        # tsc -b && vite build
+npm run preview      # serves the built app locally
+```
 
 ---
 
-## How It Works (Architecture)
+## Architecture
 
 ### Data Flow
+
 ```
 Browser  →  Vite Dev Server (:5173)  →  Proxy (/api/*)  →  Express Server (:3001)
                                                                       ↓
@@ -159,64 +187,83 @@ Browser  →  Vite Dev Server (:5173)  →  Proxy (/api/*)  →  Express Server 
                                                               DummyJSON API
 ```
 
-1. **Frontend** calls `/api/products`, `/api/products/:id`, `/api/categories` via axios
-2. **Vite** proxies `/api/*` to the Express server on `localhost:3001`
-3. **Express server** checks its in-memory cache first; if miss, fetches from DummyJSON and caches the result
-4. Response flows back through the chain
+In production (Vercel):
+```
+Browser  →  Vercel Edge  →  Serverless Function (api/proxy.js)  →  DummyJSON API
+                              ↓
+                        CDN Edge Cache (Cache-Control headers)
+```
 
-### State Management
-- **useProducts** hook manages fetching, pagination, loading/error states with AbortController
-- **useCategories** hook fetches category list once with caching
-- All filtering, sorting, and search are **client-side** (applied to fetched results via `useMemo`)
-
-### Routing
-| Route | Component | Description |
-|---|---|---|
-| `/` | `LandingPage` | Hero with floating product gallery |
-| `/products` | `ProductsPage` | Product grid + filters + sidebars |
-| `/products/:id` | `ProductPage` | Standalone product detail |
-
-### Product ID Encoding
-Numeric DummyJSON IDs are encoded as 6-character alphanumeric codes in URLs using a reversible scramble (`id * 7919 + 33554432` → base-32). This avoids exposing raw sequential IDs.
-
----
-
-## Design Decisions
+### Key Design Decisions
 
 | Decision | Rationale |
 |---|---|
 | **Standalone product page** instead of modal | Enables deep-linking, browser back/forward, and better mobile UX |
-| **Client-side search/sort/filter** | DummyJSON doesn't support server-side sorting for all fields; client-side is simpler and provides instant feedback |
-| **Express backend proxy** | Keeps API base URL configurable, enables caching (bonus), and simulates real-world architecture |
+| **Client-side search/sort/filter** | DummyJSON doesn't support server-side sorting/partial text search; client-side is simpler and provides instant feedback |
+| **Express backend proxy** | Keeps API base URL configurable, enables in-memory caching, simulates real-world microservice architecture |
 | **Three-tier cache TTL** | Product lists change often (30s), details are semi-static (2m), categories rarely change (5m) |
-| **6-char alphanumeric IDs** | Looks more polished than raw IDs in URLs, prevents ID enumeration |
-| **Inline scroll-triggered animations** | Uses `whileInView` with `once: true` — performs well and doesn't distract after initial view |
+| **6-char alphanumeric IDs** | Cleaner URLs than raw sequential IDs; prevents ID enumeration |
+| **useMemo for filtered results** | Expensive sort/filter operations are memoized — they only recompute when dependencies change |
+| **AbortController on all fetches** | Prevents race conditions when navigating rapidly between products/pages |
+| **Scroll-triggered animations with `once: true`** | Animations play once on scroll — good performance, no repeats |
 | **Spring physics for interactions** | Natural-feeling feedback (hover lift, toggle switch) vs linear transitions |
-| **Full TypeScript** | Strict types for Product, Review, Category, SortOption — catches errors early |
 
 ---
 
-## Evaluation Checklist
+## Animation Details
+
+The following Framer Motion techniques are used throughout the application:
+
+1. **Staggered grid reveal** — Product cards fade in with a cascading delay using `staggerChildren: 0.06`
+2. **Spring card hover** — Cards lift, scale, and rotate with `type: 'spring'` for tactile feedback
+3. **Landing page floating tiles** — 11 product thumbnails bob gently using `useMotionValue` + infinite `animate()` loops
+4. **Theme toggle** — The switch knob uses `spring({ stiffness: 500, damping: 30 })` for a premium feel
+5. **Scroll-triggered section reveals** — Specifications, policies, and reviews fade and slide up as the user scrolls down the product detail page
+6. **Layout animation** — Products re-animate into new positions when filters/sort change via the `layout` prop
+7. **Continuous pulse** — The "Back" button arrow has an infinite `x` oscillation
+
+---
+
+## Libraries Used
+
+| Library | Purpose |
+|---|---|
+| **react** + **react-dom** | UI framework |
+| **typescript** | Type safety and developer experience |
+| **vite** | Build tool and dev server |
+| **tailwindcss** | Utility-first CSS framework |
+| **framer-motion** | Declarative animations with spring physics |
+| **react-router-dom** | Client-side routing |
+| **axios** | HTTP client with AbortController support |
+| **lucide-react** | Lightweight icon library |
+| **express** + **cors** | Backend proxy server |
+| **concurrently** | Run multiple dev scripts in parallel |
+| **autoprefixer** + **postcss** | Tailwind CSS build pipeline |
+
+---
+
+## Submission Checklist
 
 | Criteria | Status |
 |---|---|
-| **Functionality** — All core requirements met | ✅ Browsing, filtering, search, sort, detail view, pagination |
-| **Code quality** — Clean, typed, well-organized | ✅ TypeScript strict mode, custom hooks, separated concerns |
-| **API integration** — Loading/error states, race conditions handled | ✅ Skeleton + ErrorState + AbortController on all fetches |
-| **Animations** — Framer Motion throughout | ✅ Staggered grid, spring hovers, scroll reveals, theme toggle, floating tiles |
-| **Responsiveness** — Mobile/Tablet/Desktop | ✅ `sm:` `md:` `lg:` `xl:` breakpoints on all layouts |
-| **Bonus 1: Advanced animations** | ✅ 6 animation techniques (scroll-triggered, spring physics, stagger, layout, motion values, infinite) |
-| **Bonus 2: Express backend proxy with caching** | ✅ Full proxy with 3-tier TTL cache, health endpoint |
-| **README** — Setup steps + design rationale | ✅ |
+| **Core requirements** — Browse, paginate, filter, sort, detail view, loading/error states, responsive | ✅ |
+| **TypeScript** — Strict mode, full type coverage | ✅ |
+| **Framer Motion animations** — Staggered list, detail view transition, micro-interactions | ✅ |
+| **Bonus 1: Advanced animations** — Scroll-triggered, spring physics, layout animation, floating tiles, continuous pulse, staggered reveals | ✅ |
+| **Bonus 2: Express backend proxy** — 3-tier in-memory caching, health endpoint, deployed via Vercel serverless function | ✅ |
+| **README** — Setup instructions, design decisions, third-party libraries, bonus sections highlighted | ✅ |
+| **Deployment** — Live on Vercel at [lumina-nine-zeta.vercel.app](https://lumina-nine-zeta.vercel.app) | ✅ |
+| **Repository** — Public on GitHub at [github.com/BuildWithAni/Lumina](https://github.com/BuildWithAni/Lumina) | ✅ |
 
 ---
 
 ## Notes
-- Prices are displayed with an **INR conversion** factor (`price * 83`) for the UI
+
+- Prices are displayed with INR conversion (`price × 83`) for localised pricing
 - Pagination is hidden when search is active to keep results consistent
-- The Express proxy requires `npm run server` or `npm run dev:all` during development
-- For production, the Express server can serve the built frontend from `dist/` (not implemented in this scope)
+- The Express proxy is used for local development; Vercel deployment uses a serverless function with CDN edge caching via `Cache-Control` headers
+- The `npm run dev:all` script starts both the Express server and Vite dev server concurrently
 
 ---
 
-*Developed by Anirudh for Razorpod.*
+*Developed by Anirudh for the Razorpod Frontend Developer Take-Home Assignment.*
